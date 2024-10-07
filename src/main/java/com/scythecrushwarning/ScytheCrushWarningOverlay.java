@@ -43,10 +43,9 @@ class ScytheCrushWarningOverlay extends OverlayPanel
 	private ScytheCrushWarningOverlay(ScytheCrushWarningPlugin plugin, ScytheCrushWarningConfig config)
 	{
 		super(plugin);
-		setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
+
 		this.plugin = plugin;
 		this.config = config;
-		addMenuEntry(RUNELITE_OVERLAY_CONFIG, OPTION_CONFIGURE, "Scythe on crush overlay");
 	}
 
 	@Override
@@ -57,16 +56,25 @@ class ScytheCrushWarningOverlay extends OverlayPanel
 			return null;
 		}
 
-		final String text = "Scythe on Crush"; // attackStyle.getName();
+		final boolean isFancy = config.overlayDisplay().equals(OverlayDisplay.FANCY);
+		final String text = "Your Scythe is on Crush!";
+		final int length = graphics.getFontMetrics().stringWidth(text);
+
+		panelComponent.getChildren().clear();
 
 		panelComponent.getChildren().add(TitleComponent.builder()
 			.text(text)
-			.color(Color.RED)
+			.color(isFancy ? Color.WHITE : Color.RED)
 			.build());
 
-		panelComponent.setPreferredSize(new Dimension(
-			graphics.getFontMetrics().stringWidth(text) + 10,
-			0));
+		panelComponent.setPreferredSize(new Dimension(length + 10, 0));
+
+		if (isFancy)
+		{
+			panelComponent.setBackgroundColor(config.overlayColor());
+		}
+
+		setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
 
 		return super.render(graphics);
 	}
