@@ -28,8 +28,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import javax.inject.Inject;
-import static net.runelite.api.MenuAction.RUNELITE_OVERLAY_CONFIG;
-import static net.runelite.client.ui.overlay.OverlayManager.OPTION_CONFIGURE;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.TitleComponent;
@@ -51,12 +49,11 @@ class ScytheCrushWarningOverlay extends OverlayPanel
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (!plugin.isScytheOnCrush())
+		if (!plugin.isScytheOnCrush() || plugin.isInAllowedRegion())
 		{
 			return null;
 		}
 
-		final boolean isFancy = config.overlayDisplay().equals(OverlayDisplay.FANCY);
 		final String text = "Your Scythe is on Crush!";
 		final int length = graphics.getFontMetrics().stringWidth(text);
 
@@ -64,15 +61,11 @@ class ScytheCrushWarningOverlay extends OverlayPanel
 
 		panelComponent.getChildren().add(TitleComponent.builder()
 			.text(text)
-			.color(isFancy ? Color.WHITE : Color.RED)
+			.color(Color.WHITE)
 			.build());
 
 		panelComponent.setPreferredSize(new Dimension(length + 10, 0));
-
-		if (isFancy)
-		{
-			panelComponent.setBackgroundColor(config.overlayColor());
-		}
+		panelComponent.setBackgroundColor(config.overlayColor());
 
 		setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
 

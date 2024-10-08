@@ -6,13 +6,19 @@ import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
-@ConfigGroup("scythecrushwarning")
+@ConfigGroup(ScytheCrushWarningPlugin.CONFIG_GROUP)
 public interface ScytheCrushWarningConfig extends Config
 {
-	@ConfigItem(keyName = "overlayDisplay", name = "Overlay Display", description = "Overlay display style")
-	default OverlayDisplay overlayDisplay()
+	@ConfigItem(keyName = "ignoreAraxxor", name = "Ignore at Araxxor", description = "Do not show warning at Araxxor")
+	default boolean ignoreAraxxor()
 	{
-		return OverlayDisplay.FANCY;
+		return true;
+	}
+
+	@ConfigItem(keyName = "ignoreNightmare", name = "Ignore at Nightmare", description = "Do not show warning at Nightmare")
+	default boolean ignoreNightmare()
+	{
+		return true;
 	}
 
 	@Alpha

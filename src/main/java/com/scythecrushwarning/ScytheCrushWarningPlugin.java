@@ -8,15 +8,19 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.ItemID;
+import net.runelite.api.Player;
+import net.runelite.api.PlayerComposition;
 import net.runelite.api.VarPlayer;
 import net.runelite.api.Varbits;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.kit.KitType;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.ItemVariationMapping;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -26,6 +30,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @PluginDescriptor(name = "Scythe Crush Warning", description = "Show a warning if your Scythe is on crush", tags = {"scythe", "crush", "araxxor", "nightmare"})
 public class ScytheCrushWarningPlugin extends Plugin
 {
+	public static final String CONFIG_GROUP = "scythecrushwarning";
 	private final int CRUSH_ATTACK_STYLE = 2;
 	private final Collection<Integer> SCYTHE_VARIATION_IDS = ItemVariationMapping.getVariations(ItemID.SCYTHE_OF_VITUR);
 
@@ -44,8 +49,14 @@ public class ScytheCrushWarningPlugin extends Plugin
 	@Inject
 	private OverlayManager overlayManager;
 
+	@Inject
+	private AllowedRegions allowedRegions;
+
 	@Getter
 	private boolean scytheOnCrush = false;
+
+	@Getter
+	private boolean inAllowedRegion = false;
 
 	@Override
 	protected void startUp() throws Exception
@@ -53,6 +64,7 @@ public class ScytheCrushWarningPlugin extends Plugin
 		overlayManager.add(overlay);
 
 		clientThread.invoke(() -> {
+			allowedRegions.buildAllowedRegions();
 			reset();
 
 			if (client.getGameState() == GameState.LOGGED_IN)
@@ -93,9 +105,26 @@ public class ScytheCrushWarningPlugin extends Plugin
 		checkWeapon();
 	}
 
+	@Subscribe(priority = -1)
+	public void onGameTick(GameTick event)
+	{
+		inAllowedRegion = allowedRegions.updateRegion();
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged event)
+	{
+		if (event.getGroup().equals(CONFIG_GROUP))
+		{
+			allowedRegions.buildAllowedRegions();
+		}
+	}
+
 	private void checkWeapon()
 	{
-		if (!SCYTHE_VARIATION_IDS.contains(getCurrentWeaponId()))
+		final int currentWeaponId = getCurrentWeaponId();
+
+		if (!SCYTHE_VARIATION_IDS.contains(currentWeaponId))
 		{
 			reset();
 			return;
@@ -108,6 +137,7 @@ public class ScytheCrushWarningPlugin extends Plugin
 	private void reset()
 	{
 		scytheOnCrush = false;
+		inAllowedRegion = false;
 	}
 
 	private int getCurrentWeaponId()
