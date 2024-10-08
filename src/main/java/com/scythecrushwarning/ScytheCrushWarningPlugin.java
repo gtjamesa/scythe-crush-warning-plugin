@@ -122,9 +122,9 @@ public class ScytheCrushWarningPlugin extends Plugin
 
 	private void checkWeapon()
 	{
-		final int currentWeaponId = getCurrentWeaponId();
+		final Integer currentWeaponId = getCurrentWeaponId();
 
-		if (!SCYTHE_VARIATION_IDS.contains(currentWeaponId))
+		if (currentWeaponId == null || !SCYTHE_VARIATION_IDS.contains(currentWeaponId))
 		{
 			reset();
 			return;
@@ -140,9 +140,26 @@ public class ScytheCrushWarningPlugin extends Plugin
 		inAllowedRegion = false;
 	}
 
-	private int getCurrentWeaponId()
+	private Integer getCurrentWeaponId()
 	{
-		return client.getLocalPlayer().getPlayerComposition().getEquipmentId(KitType.WEAPON);
+		if (client.getGameState() != GameState.LOGGED_IN)
+		{
+			return null;
+		}
+
+		Player player = client.getLocalPlayer();
+		if (player == null)
+		{
+			return null;
+		}
+
+		PlayerComposition playerComposition = player.getPlayerComposition();
+		if (playerComposition == null)
+		{
+			return null;
+		}
+
+		return playerComposition.getEquipmentId(KitType.WEAPON);
 	}
 
 	@Provides
