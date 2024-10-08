@@ -40,6 +40,11 @@ class AllowedRegions
 		{
 			allowedRegions.addAll(AraxxorRegion.getAllRegions());
 		}
+
+		if (config.ignoreNightmare())
+		{
+			allowedRegions.addAll(NightmareRegion.getAllRegions());
+		}
 	}
 
 	public boolean regionChanged()
