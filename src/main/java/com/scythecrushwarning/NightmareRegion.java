@@ -6,12 +6,13 @@ import lombok.Getter;
 @Getter
 public enum NightmareRegion
 {
-	NIGHTMARE(15256),
+	NIGHTMARE(15515),
 	SLEPE_GRAVEYARD(14899),
 	SLEPE_DOCK(14643),
 	SANCTUARY_1(14999),
 	SANCTUARY_2(15255),
-	SANCTUARY_3(15257);
+	SANCTUARY_3(15257),
+	SANCTUARY_NIGHTMARE(15256);
 
 	private final int region;
 
