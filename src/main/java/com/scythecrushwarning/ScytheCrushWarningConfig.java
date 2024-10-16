@@ -21,6 +21,12 @@ public interface ScytheCrushWarningConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(keyName = "ignoreHueycoatl", name = "Ignore at Hueycoatl", description = "Do not show warning at Hueycoatl")
+	default boolean ignoreHueycoatl()
+	{
+		return true;
+	}
+
 	@Alpha
 	@ConfigItem(keyName = "overlayColor", name = "Overlay Color", description = "Overlay Background Color")
 	default Color overlayColor()

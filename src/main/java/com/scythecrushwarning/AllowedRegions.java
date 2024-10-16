@@ -45,6 +45,11 @@ class AllowedRegions
 		{
 			allowedRegions.addAll(NightmareRegion.getAllRegions());
 		}
+
+		if (config.ignoreHueycoatl())
+		{
+			allowedRegions.addAll(HueycoatlRegion.getAllRegions());
+		}
 	}
 
 	public boolean regionChanged()
