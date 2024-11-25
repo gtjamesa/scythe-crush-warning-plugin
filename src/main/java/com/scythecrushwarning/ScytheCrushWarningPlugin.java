@@ -2,6 +2,8 @@ package com.scythecrushwarning;
 
 import com.google.inject.Provides;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +34,13 @@ public class ScytheCrushWarningPlugin extends Plugin
 {
 	public static final String CONFIG_GROUP = "scythecrushwarning";
 	private final int CRUSH_ATTACK_STYLE = 2;
-	private final Collection<Integer> SCYTHE_VARIATION_IDS = ItemVariationMapping.getVariations(ItemID.SCYTHE_OF_VITUR);
+	private Collection<Integer> SCYTHE_VARIATION_IDS;
+
+	private final List<Integer> SCYTHE_ITEM_IDS = List.of(
+		ItemID.SCYTHE_OF_VITUR,
+		ItemID.HOLY_SCYTHE_OF_VITUR,
+		ItemID.SANGUINE_SCYTHE_OF_VITUR
+	);
 
 	@Inject
 	private Client client;
@@ -63,9 +71,13 @@ public class ScytheCrushWarningPlugin extends Plugin
 	{
 		overlayManager.add(overlay);
 
+		SCYTHE_VARIATION_IDS = getAllScytheVariations();
+
 		clientThread.invoke(() -> {
 			allowedRegions.buildAllowedRegions();
 			reset();
+
+//			log.debug("Scythe variations: {}", SCYTHE_VARIATION_IDS);
 
 			if (client.getGameState() == GameState.LOGGED_IN)
 			{
@@ -160,6 +172,14 @@ public class ScytheCrushWarningPlugin extends Plugin
 		}
 
 		return playerComposition.getEquipmentId(KitType.WEAPON);
+	}
+
+	private Collection<Integer> getAllScytheVariations()
+	{
+		return SCYTHE_ITEM_IDS.stream()
+			.map(ItemVariationMapping::getVariations)
+			.flatMap(Collection::stream)
+			.collect(Collectors.toList());
 	}
 
 	@Provides
