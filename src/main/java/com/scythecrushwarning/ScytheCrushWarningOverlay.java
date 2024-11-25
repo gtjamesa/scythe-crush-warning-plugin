@@ -42,6 +42,8 @@ class ScytheCrushWarningOverlay extends OverlayPanel
 	{
 		super(plugin);
 
+		setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
+
 		this.plugin = plugin;
 		this.config = config;
 	}
@@ -66,8 +68,6 @@ class ScytheCrushWarningOverlay extends OverlayPanel
 
 		panelComponent.setPreferredSize(new Dimension(length + 10, 0));
 		panelComponent.setBackgroundColor(config.overlayColor());
-
-		setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
 
 		return super.render(graphics);
 	}
