@@ -27,6 +27,12 @@ public interface ScytheCrushWarningConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(keyName = "ignoreCerberus", name = "Ignore at Cerberus", description = "Do not show warning at Cerberus")
+	default boolean ignoreCerberus()
+	{
+		return true;
+	}
+
 	@Alpha
 	@ConfigItem(keyName = "overlayColor", name = "Overlay Color", description = "Overlay Background Color")
 	default Color overlayColor()

@@ -50,6 +50,11 @@ class AllowedRegions
 		{
 			allowedRegions.addAll(HueycoatlRegion.getAllRegions());
 		}
+
+		if (config.ignoreCerberus())
+		{
+			allowedRegions.addAll(CerberusRegion.getAllRegions());
+		}
 	}
 
 	public boolean regionChanged()
