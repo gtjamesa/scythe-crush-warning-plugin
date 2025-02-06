@@ -55,6 +55,11 @@ class AllowedRegions
 		{
 			allowedRegions.addAll(CerberusRegion.getAllRegions());
 		}
+
+		if (config.ignoreRoyalTitans())
+		{
+			allowedRegions.addAll(RoyalTitansRegion.getAllRegions());
+		}
 	}
 
 	public boolean regionChanged()

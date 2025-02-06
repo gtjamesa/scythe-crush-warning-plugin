@@ -33,6 +33,12 @@ public interface ScytheCrushWarningConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(keyName = "ignoreRoyalTitans", name = "Ignore at Royal Titans", description = "Do not show warning at Royal Titans")
+	default boolean ignoreRoyalTitans()
+	{
+		return true;
+	}
+
 	@Alpha
 	@ConfigItem(keyName = "overlayColor", name = "Overlay Color", description = "Overlay Background Color")
 	default Color overlayColor()
