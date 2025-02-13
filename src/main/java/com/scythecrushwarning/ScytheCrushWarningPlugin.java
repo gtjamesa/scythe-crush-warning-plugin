@@ -29,7 +29,10 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 @Slf4j
-@PluginDescriptor(name = "Scythe Crush Warning", description = "Show a warning if your Scythe is on crush", tags = {"scythe", "crush", "araxxor", "nightmare", "hueycoatl", "cerberus", "royal titans"})
+@PluginDescriptor(
+	name = "Scythe Crush Warning",
+	description = "Show a warning if your Scythe is on crush", tags = {"scythe", "crush", "araxxor", "nightmare", "hueycoatl", "cerberus", "royal titans", "amoxliatl"}
+)
 public class ScytheCrushWarningPlugin extends Plugin
 {
 	public static final String CONFIG_GROUP = "scythecrushwarning";

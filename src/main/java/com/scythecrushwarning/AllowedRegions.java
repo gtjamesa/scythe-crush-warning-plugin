@@ -60,6 +60,11 @@ class AllowedRegions
 		{
 			allowedRegions.addAll(RoyalTitansRegion.getAllRegions());
 		}
+
+		if (config.ignoreAmoxliatl())
+		{
+			allowedRegions.addAll(AmoxliatlRegion.getAllRegions());
+		}
 	}
 
 	public boolean regionChanged()

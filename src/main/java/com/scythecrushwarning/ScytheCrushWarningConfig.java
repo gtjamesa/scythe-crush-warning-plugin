@@ -39,6 +39,12 @@ public interface ScytheCrushWarningConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(keyName = "ignoreAmoxliatl", name = "Ignore at Amoxliatl", description = "Do not show warning at Amoxliatl")
+	default boolean ignoreAmoxliatl()
+	{
+		return true;
+	}
+
 	@Alpha
 	@ConfigItem(keyName = "overlayColor", name = "Overlay Color", description = "Overlay Background Color")
 	default Color overlayColor()
