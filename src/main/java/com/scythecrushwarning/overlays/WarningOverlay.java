@@ -22,8 +22,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.scythecrushwarning;
+package com.scythecrushwarning.overlays;
 
+import com.scythecrushwarning.ScytheCrushWarningConfig;
+import com.scythecrushwarning.ScytheCrushWarningPlugin;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -32,13 +34,13 @@ import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 
-class ScytheCrushWarningOverlay extends OverlayPanel
+public class WarningOverlay extends OverlayPanel
 {
 	private final ScytheCrushWarningPlugin plugin;
 	private final ScytheCrushWarningConfig config;
 
 	@Inject
-	private ScytheCrushWarningOverlay(ScytheCrushWarningPlugin plugin, ScytheCrushWarningConfig config)
+	private WarningOverlay(ScytheCrushWarningPlugin plugin, ScytheCrushWarningConfig config)
 	{
 		super(plugin);
 
@@ -51,7 +53,7 @@ class ScytheCrushWarningOverlay extends OverlayPanel
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (!plugin.isScytheOnCrush() || plugin.isInAllowedRegion())
+		if (!plugin.isScytheEquipped() || !plugin.isScytheOnCrush() || plugin.isInAllowedRegion())
 		{
 			return null;
 		}

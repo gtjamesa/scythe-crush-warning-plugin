@@ -1,6 +1,8 @@
 package com.scythecrushwarning;
 
 import com.google.inject.Provides;
+import com.scythecrushwarning.overlays.InventoryOverlay;
+import com.scythecrushwarning.overlays.WarningOverlay;
 import com.scythecrushwarning.regions.AllowedRegions;
 import java.util.Collection;
 import java.util.List;
@@ -60,7 +62,10 @@ public class ScytheCrushWarningPlugin extends Plugin
 	private ScytheCrushWarningConfig config;
 
 	@Inject
-	private ScytheCrushWarningOverlay overlay;
+	private WarningOverlay overlay;
+
+	@Inject
+	private InventoryOverlay inventoryOverlay;
 
 	@Inject
 	private OverlayManager overlayManager;
@@ -72,15 +77,21 @@ public class ScytheCrushWarningPlugin extends Plugin
 	private boolean scytheOnCrush = false;
 
 	@Getter
+	private boolean scytheEquipped = false;
+
+	@Getter
 	private boolean inAllowedRegion = false;
 
 	@Getter
 	private String equippedWeaponName;
 
+	private int lastGameTick = -1;
+
 	@Override
 	protected void startUp() throws Exception
 	{
 		overlayManager.add(overlay);
+		overlayManager.add(inventoryOverlay);
 
 		SCYTHE_VARIATION_IDS = getAllVariations(SCYTHE_ITEM_IDS);
 		SRA_VARIATION_IDS = getAllVariations(SRA_ITEM_IDS);
@@ -93,7 +104,7 @@ public class ScytheCrushWarningPlugin extends Plugin
 
 			if (client.getGameState() == GameState.LOGGED_IN)
 			{
-				checkWeapon();
+				checkWeapon(TriggerType.GAME_STATE);
 			}
 		});
 	}
@@ -110,7 +121,7 @@ public class ScytheCrushWarningPlugin extends Plugin
 		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
 		{
 			reset();
-			checkWeapon();
+			checkWeapon(TriggerType.GAME_STATE);
 		}
 	}
 
@@ -119,14 +130,16 @@ public class ScytheCrushWarningPlugin extends Plugin
 	{
 		if (event.getVarpId() == VarPlayerID.COM_MODE || event.getVarbitId() == VarbitID.COMBAT_WEAPON_CATEGORY)
 		{
-			checkWeapon();
+			log.debug("onVarbitChanged");
+			checkWeapon(TriggerType.VARBIT);
 		}
 	}
 
 	@Subscribe
 	public void onItemContainerChanged(ItemContainerChanged event)
 	{
-		checkWeapon();
+		log.debug("onItemContainerChanged");
+		checkWeapon(TriggerType.ITEM_CONTAINER);
 	}
 
 	@Subscribe(priority = -1)
@@ -144,11 +157,19 @@ public class ScytheCrushWarningPlugin extends Plugin
 		}
 	}
 
-	private void checkWeapon()
+	private void checkWeapon(TriggerType triggerType)
 	{
 		final Integer currentWeaponId = getCurrentWeaponId();
 		final boolean containsScythe = SCYTHE_VARIATION_IDS.contains(currentWeaponId);
 		final boolean containsSra = SRA_VARIATION_IDS.contains(currentWeaponId);
+
+		// debounce the function call as we've already checked this tick
+		if (lastGameTick == client.getTickCount())
+		{
+			return;
+		}
+
+		lastGameTick = client.getTickCount();
 
 		if (currentWeaponId == null || (!containsScythe && !containsSra))
 		{
@@ -167,6 +188,8 @@ public class ScytheCrushWarningPlugin extends Plugin
 		{
 			equippedWeaponName = "SRA";
 		}
+
+		log.debug("Scythe equipped: {}, Scythe on crush: {}, In allowed region: {}", scytheEquipped, scytheOnCrush, inAllowedRegion);
 	}
 
 	private void reset()
@@ -209,5 +232,12 @@ public class ScytheCrushWarningPlugin extends Plugin
 	ScytheCrushWarningConfig provideConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(ScytheCrushWarningConfig.class);
+	}
+
+	enum TriggerType
+	{
+		GAME_STATE,
+		ITEM_CONTAINER,
+		VARBIT,
 	}
 }
