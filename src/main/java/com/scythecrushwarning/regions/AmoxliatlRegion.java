@@ -1,13 +1,15 @@
-package com.scythecrushwarning;
+package com.scythecrushwarning.regions;
 
 import java.util.ArrayList;
 import lombok.Getter;
 
 @Getter
-public enum HueycoatlRegion
+public enum AmoxliatlRegion
 {
-	HUEYCOATL(5939),
-	HUEYCOATL_EAST(6195);
+	AMOXLIATL(5446),
+	TWILIGHT_TEMPLE(6450),
+	TWILIGHT_TEMPLE_TELEPORT(6706),
+	INSIDE_TEMPLE(6550);
 
 	private final int region;
 
@@ -15,13 +17,13 @@ public enum HueycoatlRegion
 
 	static
 	{
-		for (HueycoatlRegion e : values())
+		for (AmoxliatlRegion e : values())
 		{
 			ALL_REGIONS.add(e.region);
 		}
 	}
 
-	HueycoatlRegion(int region)
+	AmoxliatlRegion(int region)
 	{
 		this.region = region;
 	}

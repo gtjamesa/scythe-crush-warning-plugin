@@ -1,6 +1,7 @@
 package com.scythecrushwarning;
 
 import com.google.inject.Provides;
+import com.scythecrushwarning.regions.AllowedRegions;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;

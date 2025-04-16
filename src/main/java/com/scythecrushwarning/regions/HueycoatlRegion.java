@@ -1,15 +1,13 @@
-package com.scythecrushwarning;
+package com.scythecrushwarning.regions;
 
 import java.util.ArrayList;
 import lombok.Getter;
 
 @Getter
-public enum CerberusRegion
+public enum HueycoatlRegion
 {
-	CERBERUS(5139),
-	CERBERUS_NORTH(5140),
-	CERBERUS_EAST(5395),
-	CERBERUS_WEST(4883);
+	HUEYCOATL(5939),
+	HUEYCOATL_EAST(6195);
 
 	private final int region;
 
@@ -17,13 +15,13 @@ public enum CerberusRegion
 
 	static
 	{
-		for (CerberusRegion e : values())
+		for (HueycoatlRegion e : values())
 		{
 			ALL_REGIONS.add(e.region);
 		}
 	}
 
-	CerberusRegion(int region)
+	HueycoatlRegion(int region)
 	{
 		this.region = region;
 	}

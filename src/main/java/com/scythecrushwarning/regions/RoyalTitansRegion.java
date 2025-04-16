@@ -1,4 +1,4 @@
-package com.scythecrushwarning;
+package com.scythecrushwarning.regions;
 
 import java.util.ArrayList;
 import lombok.Getter;

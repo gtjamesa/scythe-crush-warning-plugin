@@ -1,5 +1,6 @@
-package com.scythecrushwarning;
+package com.scythecrushwarning.regions;
 
+import com.scythecrushwarning.ScytheCrushWarningConfig;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import lombok.Getter;
@@ -8,7 +9,7 @@ import net.runelite.api.Client;
 import net.runelite.api.Player;
 import net.runelite.api.coords.WorldPoint;
 
-class AllowedRegions
+public class AllowedRegions
 {
 	@Inject
 	private Client client;
