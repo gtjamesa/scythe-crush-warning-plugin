@@ -130,8 +130,11 @@ public class ScytheCrushWarningPlugin extends Plugin
 	{
 		if (event.getVarpId() == VarPlayerID.COM_MODE || event.getVarbitId() == VarbitID.COMBAT_WEAPON_CATEGORY)
 		{
-			log.debug("onVarbitChanged");
-			checkWeapon(TriggerType.VARBIT);
+			if (checkScytheEquipped())
+			{
+				log.debug("onVarbitChanged");
+				checkWeapon(TriggerType.VARBIT);
+			}
 		}
 	}
 
@@ -155,6 +158,14 @@ public class ScytheCrushWarningPlugin extends Plugin
 		{
 			allowedRegions.buildAllowedRegions();
 		}
+	}
+
+	private boolean checkScytheEquipped()
+	{
+		final Integer currentWeaponId = getCurrentWeaponId();
+		scytheEquipped = scytheIds().contains(currentWeaponId);
+
+		return scytheEquipped;
 	}
 
 	private void checkWeapon(TriggerType triggerType)
