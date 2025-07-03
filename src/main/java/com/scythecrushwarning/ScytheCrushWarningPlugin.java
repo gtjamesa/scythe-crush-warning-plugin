@@ -9,15 +9,15 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.ItemID;
 import net.runelite.api.Player;
 import net.runelite.api.PlayerComposition;
-import net.runelite.api.VarPlayer;
-import net.runelite.api.Varbits;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.VarbitChanged;
+import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.VarPlayerID;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.kit.KitType;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
@@ -41,8 +41,8 @@ public class ScytheCrushWarningPlugin extends Plugin
 
 	private final List<Integer> SCYTHE_ITEM_IDS = List.of(
 		ItemID.SCYTHE_OF_VITUR,
-		ItemID.HOLY_SCYTHE_OF_VITUR,
-		ItemID.SANGUINE_SCYTHE_OF_VITUR
+		ItemID.SCYTHE_OF_VITUR_OR, // holy
+		ItemID.SCYTHE_OF_VITUR_BL // sanguine
 	);
 
 	@Inject
@@ -108,7 +108,7 @@ public class ScytheCrushWarningPlugin extends Plugin
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged event)
 	{
-		if (event.getVarpId() == VarPlayer.ATTACK_STYLE || event.getVarbitId() == Varbits.EQUIPPED_WEAPON_TYPE)
+		if (event.getVarpId() == VarPlayerID.COM_MODE || event.getVarbitId() == VarbitID.COMBAT_WEAPON_CATEGORY)
 		{
 			checkWeapon();
 		}
@@ -145,7 +145,7 @@ public class ScytheCrushWarningPlugin extends Plugin
 			return;
 		}
 
-		final int currentAttackStyle = client.getVarpValue(VarPlayer.ATTACK_STYLE);
+		final int currentAttackStyle = client.getVarpValue(VarPlayerID.COM_MODE);
 		scytheOnCrush = currentAttackStyle == CRUSH_ATTACK_STYLE;
 	}
 
