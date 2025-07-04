@@ -31,16 +31,20 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @Slf4j
 @PluginDescriptor(
 	name = "Scythe Crush Warning",
-	description = "Show a warning if your Scythe is on crush", tags = {"scythe", "crush", "araxxor", "nightmare", "hueycoatl", "cerberus", "royal titans", "amoxliatl"}
+	description = "Show a warning if your Scythe is on crush", tags = {"scythe", "sra", "soulreaper", "crush", "araxxor", "nightmare", "hueycoatl", "cerberus", "royal titans", "amoxliatl"}
 )
 public class ScytheCrushWarningPlugin extends Plugin
 {
 	public static final String CONFIG_GROUP = "scythecrushwarning";
 	private final int CRUSH_ATTACK_STYLE = 2;
+	private final int scytheItemId = ItemID.SCYTHE_OF_VITUR;
+	private final int sraItemId = ItemID.BETA_ITEM_1; // soulreaper axe (25484)
 	private Collection<Integer> SCYTHE_VARIATION_IDS;
+	private Collection<Integer> SRA_VARIATION_IDS;
 
+	private final List<Integer> SRA_ITEM_IDS = List.of(sraItemId);
 	private final List<Integer> SCYTHE_ITEM_IDS = List.of(
-		ItemID.SCYTHE_OF_VITUR,
+		scytheItemId,
 		ItemID.SCYTHE_OF_VITUR_OR, // holy
 		ItemID.SCYTHE_OF_VITUR_BL // sanguine
 	);
@@ -69,12 +73,16 @@ public class ScytheCrushWarningPlugin extends Plugin
 	@Getter
 	private boolean inAllowedRegion = false;
 
+	@Getter
+	private String equippedWeaponName;
+
 	@Override
 	protected void startUp() throws Exception
 	{
 		overlayManager.add(overlay);
 
-		SCYTHE_VARIATION_IDS = getAllScytheVariations();
+		SCYTHE_VARIATION_IDS = getAllVariations(SCYTHE_ITEM_IDS);
+		SRA_VARIATION_IDS = getAllVariations(SRA_ITEM_IDS);
 
 		clientThread.invoke(() -> {
 			allowedRegions.buildAllowedRegions();
@@ -138,8 +146,10 @@ public class ScytheCrushWarningPlugin extends Plugin
 	private void checkWeapon()
 	{
 		final Integer currentWeaponId = getCurrentWeaponId();
+		final boolean containsScythe = SCYTHE_VARIATION_IDS.contains(currentWeaponId);
+		final boolean containsSra = SRA_VARIATION_IDS.contains(currentWeaponId);
 
-		if (currentWeaponId == null || !SCYTHE_VARIATION_IDS.contains(currentWeaponId))
+		if (currentWeaponId == null || (!containsScythe && !containsSra))
 		{
 			reset();
 			return;
@@ -147,6 +157,15 @@ public class ScytheCrushWarningPlugin extends Plugin
 
 		final int currentAttackStyle = client.getVarpValue(VarPlayerID.COM_MODE);
 		scytheOnCrush = currentAttackStyle == CRUSH_ATTACK_STYLE;
+
+		if (containsScythe)
+		{
+			equippedWeaponName = "Scythe";
+		}
+		else
+		{
+			equippedWeaponName = "SRA";
+		}
 	}
 
 	private void reset()
@@ -177,9 +196,9 @@ public class ScytheCrushWarningPlugin extends Plugin
 		return playerComposition.getEquipmentId(KitType.WEAPON);
 	}
 
-	private Collection<Integer> getAllScytheVariations()
+	private Collection<Integer> getAllVariations(List<Integer> itemIds)
 	{
-		return SCYTHE_ITEM_IDS.stream()
+		return itemIds.stream()
 			.map(ItemVariationMapping::getVariations)
 			.flatMap(Collection::stream)
 			.collect(Collectors.toList());
