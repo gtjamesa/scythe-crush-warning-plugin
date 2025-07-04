@@ -56,7 +56,11 @@ class ScytheCrushWarningOverlay extends OverlayPanel
 			return null;
 		}
 
-		final String text = "Your Scythe is on Crush!";
+		final String equippedWeaponName = plugin.getEquippedWeaponName() == null
+			? "Scythe"
+			: plugin.getEquippedWeaponName();
+
+		final String text = "Your " + equippedWeaponName + " is on Crush!";
 		final int length = graphics.getFontMetrics().stringWidth(text);
 
 		panelComponent.getChildren().clear();
