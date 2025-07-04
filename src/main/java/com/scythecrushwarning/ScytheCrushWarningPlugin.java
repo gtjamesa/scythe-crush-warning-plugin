@@ -151,7 +151,7 @@ public class ScytheCrushWarningPlugin extends Plugin
 
 		if (currentWeaponId == null || (!containsScythe && !containsSra))
 		{
-			reset();
+			scytheOnCrush = false;
 			return;
 		}
 
