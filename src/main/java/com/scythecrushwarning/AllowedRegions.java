@@ -65,6 +65,11 @@ class AllowedRegions
 		{
 			allowedRegions.addAll(AmoxliatlRegion.getAllRegions());
 		}
+
+		if (config.ignoreMaggotKing())
+		{
+			allowedRegions.addAll(MaggotKingRegion.getAllRegions());
+		}
 	}
 
 	public boolean regionChanged()
