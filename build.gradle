@@ -31,7 +31,7 @@ dependencies {
 }
 
 group = 'com.scythecrushwarning'
-version = '1.5.1'
+version = '1.5.2'
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
