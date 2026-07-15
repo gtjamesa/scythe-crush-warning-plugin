@@ -31,7 +31,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @Slf4j
 @PluginDescriptor(
 	name = "Scythe Crush Warning",
-	description = "Show a warning if your Scythe is on crush", tags = {"scythe", "sra", "soulreaper", "crush", "araxxor", "nightmare", "hueycoatl", "cerberus", "royal titans", "amoxliatl"}
+	description = "Show a warning if your Scythe is on crush", tags = {"scythe", "sra", "soulreaper", "crush", "araxxor", "nightmare", "hueycoatl", "cerberus", "royal titans", "amoxliatl", "maggot king"}
 )
 public class ScytheCrushWarningPlugin extends Plugin
 {

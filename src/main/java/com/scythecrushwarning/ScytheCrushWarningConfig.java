@@ -45,6 +45,12 @@ public interface ScytheCrushWarningConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(keyName = "ignoreMaggotKing", name = "Ignore at Maggot King", description = "Do not show warning at Maggot King")
+	default boolean ignoreMaggotKing()
+	{
+		return true;
+	}
+
 	@Alpha
 	@ConfigItem(keyName = "overlayColor", name = "Overlay Color", description = "Overlay Background Color")
 	default Color overlayColor()
