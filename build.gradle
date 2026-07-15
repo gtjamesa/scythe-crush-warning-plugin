@@ -3,11 +3,7 @@ plugins {
 }
 
 repositories {
-	mavenLocal {
-		content {
-			includeGroupByRegex("net\\.runelite.*")
-		}
-	}
+	mavenLocal()
 	maven {
 		url = 'https://repo.runelite.net'
 		content {
@@ -31,7 +27,7 @@ dependencies {
 }
 
 group = 'com.scythecrushwarning'
-version = '1.5.2'
+version = '1.5.3'
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
