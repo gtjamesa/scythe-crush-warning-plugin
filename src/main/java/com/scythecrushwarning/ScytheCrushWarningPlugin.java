@@ -68,7 +68,10 @@ public class ScytheCrushWarningPlugin extends Plugin
 	private AllowedRegions allowedRegions;
 
 	@Getter
-	private boolean scytheOnCrush = false;
+	private boolean scytheOrSRAEquipped = false;
+
+	@Getter
+	private int currentAttackStyle = 0;
 
 	@Getter
 	private boolean inAllowedRegion = false;
@@ -151,12 +154,12 @@ public class ScytheCrushWarningPlugin extends Plugin
 
 		if (currentWeaponId == null || (!containsScythe && !containsSra))
 		{
-			scytheOnCrush = false;
+			scytheOrSRAEquipped = false;
 			return;
 		}
 
-		final int currentAttackStyle = client.getVarpValue(VarPlayerID.COM_MODE);
-		scytheOnCrush = currentAttackStyle == CRUSH_ATTACK_STYLE;
+		scytheOrSRAEquipped = true;
+		currentAttackStyle = client.getVarpValue(VarPlayerID.COM_MODE);
 
 		if (containsScythe)
 		{
@@ -170,7 +173,7 @@ public class ScytheCrushWarningPlugin extends Plugin
 
 	private void reset()
 	{
-		scytheOnCrush = false;
+		scytheOrSRAEquipped = false;
 		inAllowedRegion = false;
 	}
 

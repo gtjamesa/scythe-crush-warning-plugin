@@ -36,6 +36,7 @@ class ScytheCrushWarningOverlay extends OverlayPanel
 {
 	private final ScytheCrushWarningPlugin plugin;
 	private final ScytheCrushWarningConfig config;
+	private final int CRUSH_ATTACK_STYLE = 2;
 
 	@Inject
 	private ScytheCrushWarningOverlay(ScytheCrushWarningPlugin plugin, ScytheCrushWarningConfig config)
@@ -51,7 +52,12 @@ class ScytheCrushWarningOverlay extends OverlayPanel
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (!plugin.isScytheOnCrush() || plugin.isInAllowedRegion())
+		final boolean slashWarning = config.displaySlashWarning() && plugin.isScytheOrSRAEquipped()
+				&& plugin.isInAllowedRegion() && plugin.getCurrentAttackStyle() != CRUSH_ATTACK_STYLE;
+		final boolean crushWarning = plugin.isScytheOrSRAEquipped()
+				&& !plugin.isInAllowedRegion() && plugin.getCurrentAttackStyle() == CRUSH_ATTACK_STYLE;
+
+		if (!slashWarning && !crushWarning)
 		{
 			return null;
 		}
@@ -60,7 +66,9 @@ class ScytheCrushWarningOverlay extends OverlayPanel
 			? "Scythe"
 			: plugin.getEquippedWeaponName();
 
-		final String text = "Your " + equippedWeaponName + " is on Crush!";
+		final String styleText = slashWarning ? "Slash" : "Crush";
+
+		final String text = "Your " + equippedWeaponName + " is on " + styleText + "!";
 		final int length = graphics.getFontMetrics().stringWidth(text);
 
 		panelComponent.getChildren().clear();
