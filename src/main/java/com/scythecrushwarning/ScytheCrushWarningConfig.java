@@ -51,6 +51,12 @@ public interface ScytheCrushWarningConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(keyName = "displaySlashWarning", name = "Display Slash Warning", description = "Warn On Slash In Crush Areas")
+	default boolean displaySlashWarning()
+	{
+		return true;
+	}
+
 	@Alpha
 	@ConfigItem(keyName = "overlayColor", name = "Overlay Color", description = "Overlay Background Color")
 	default Color overlayColor()
