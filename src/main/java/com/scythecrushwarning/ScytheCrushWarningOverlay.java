@@ -52,9 +52,9 @@ class ScytheCrushWarningOverlay extends OverlayPanel
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		final boolean slashWarning = config.displaySlashWarning() && plugin.isScytheOrSRAEquipped()
+		final boolean slashWarning = config.displaySlashWarning() && plugin.isWeaponEquipped()
 				&& plugin.isInAllowedRegion() && plugin.getCurrentAttackStyle() != CRUSH_ATTACK_STYLE;
-		final boolean crushWarning = plugin.isScytheOrSRAEquipped()
+		final boolean crushWarning = plugin.isWeaponEquipped()
 				&& !plugin.isInAllowedRegion() && plugin.getCurrentAttackStyle() == CRUSH_ATTACK_STYLE;
 
 		if (!slashWarning && !crushWarning)

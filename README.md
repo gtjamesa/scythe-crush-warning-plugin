@@ -2,4 +2,14 @@
 
 Have you finished an Araxxor task before heading straight into ToB and realising at Xarpus that your Scythe's attack style is on crush? Then, this plugin is for you!
 
-The overlay hides automatically at Araxxor/Nightmare/Hueycoatl/Cerberus/Royal Titans. SRA is also supported.
+The overlay hides automatically at:
+
+- Araxxor
+- Nightmare
+- Hueycoatl
+- Cerberus
+- Royal Titans
+- Amoxliatl
+- Maggot King
+
+SRA and Dharok's greataxe are also supported.

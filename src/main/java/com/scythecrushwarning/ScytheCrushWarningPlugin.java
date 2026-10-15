@@ -31,7 +31,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @Slf4j
 @PluginDescriptor(
 	name = "Scythe Crush Warning",
-	description = "Show a warning if your Scythe is on crush", tags = {"scythe", "sra", "soulreaper", "crush", "araxxor", "nightmare", "hueycoatl", "cerberus", "royal titans", "amoxliatl", "maggot king"}
+	description = "Show a warning if your Scythe is on crush", tags = {"scythe", "sra", "soulreaper", "dharok", "crush", "araxxor", "nightmare", "hueycoatl", "cerberus", "royal titans", "amoxliatl", "maggot king"}
 )
 public class ScytheCrushWarningPlugin extends Plugin
 {
@@ -41,8 +41,10 @@ public class ScytheCrushWarningPlugin extends Plugin
 	private final int sraItemId = ItemID.BETA_ITEM_1; // soulreaper axe (25484)
 	private Collection<Integer> SCYTHE_VARIATION_IDS;
 	private Collection<Integer> SRA_VARIATION_IDS;
+	private Collection<Integer> DHAROK_VARIATION_IDS;
 
 	private final List<Integer> SRA_ITEM_IDS = List.of(sraItemId);
+	private final List<Integer> DHAROK_ITEM_IDS = List.of(ItemID.BARROWS_DHAROK_WEAPON); // variations include degraded
 	private final List<Integer> SCYTHE_ITEM_IDS = List.of(
 		scytheItemId,
 		ItemID.SCYTHE_OF_VITUR_OR, // holy
@@ -68,7 +70,7 @@ public class ScytheCrushWarningPlugin extends Plugin
 	private AllowedRegions allowedRegions;
 
 	@Getter
-	private boolean scytheOrSRAEquipped = false;
+	private boolean weaponEquipped = false;
 
 	@Getter
 	private int currentAttackStyle = 0;
@@ -86,6 +88,7 @@ public class ScytheCrushWarningPlugin extends Plugin
 
 		SCYTHE_VARIATION_IDS = getAllVariations(SCYTHE_ITEM_IDS);
 		SRA_VARIATION_IDS = getAllVariations(SRA_ITEM_IDS);
+		DHAROK_VARIATION_IDS = getAllVariations(DHAROK_ITEM_IDS);
 
 		clientThread.invoke(() -> {
 			allowedRegions.buildAllowedRegions();
@@ -143,37 +146,43 @@ public class ScytheCrushWarningPlugin extends Plugin
 		if (event.getGroup().equals(CONFIG_GROUP))
 		{
 			allowedRegions.buildAllowedRegions();
+			clientThread.invoke(this::checkWeapon);
 		}
 	}
 
 	private void checkWeapon()
 	{
 		final Integer currentWeaponId = getCurrentWeaponId();
-		final boolean containsScythe = SCYTHE_VARIATION_IDS.contains(currentWeaponId);
-		final boolean containsSra = SRA_VARIATION_IDS.contains(currentWeaponId);
+		final boolean containsScythe = config.warnScythe() && SCYTHE_VARIATION_IDS.contains(currentWeaponId);
+		final boolean containsSra = config.warnSoulreaperAxe() && SRA_VARIATION_IDS.contains(currentWeaponId);
+		final boolean containsDharok = config.warnDharokGreataxe() && DHAROK_VARIATION_IDS.contains(currentWeaponId);
 
-		if (currentWeaponId == null || (!containsScythe && !containsSra))
+		if (currentWeaponId == null || (!containsScythe && !containsSra && !containsDharok))
 		{
-			scytheOrSRAEquipped = false;
+			weaponEquipped = false;
 			return;
 		}
 
-		scytheOrSRAEquipped = true;
+		weaponEquipped = true;
 		currentAttackStyle = client.getVarpValue(VarPlayerID.COM_MODE);
 
 		if (containsScythe)
 		{
 			equippedWeaponName = "Scythe";
 		}
-		else
+		else if (containsSra)
 		{
 			equippedWeaponName = "SRA";
+		}
+		else
+		{
+			equippedWeaponName = "Dharok's axe";
 		}
 	}
 
 	private void reset()
 	{
-		scytheOrSRAEquipped = false;
+		weaponEquipped = false;
 		inAllowedRegion = false;
 	}
 
