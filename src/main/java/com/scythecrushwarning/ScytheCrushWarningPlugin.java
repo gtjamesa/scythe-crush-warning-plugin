@@ -145,7 +145,8 @@ public class ScytheCrushWarningPlugin extends Plugin
 	{
 		if (event.getGroup().equals(CONFIG_GROUP))
 		{
-			allowedRegions.buildAllowedRegions();
+			// list is read on the client thread each GameTick
+			clientThread.invoke(allowedRegions::buildAllowedRegions);
 			clientThread.invoke(this::checkWeapon);
 		}
 	}
