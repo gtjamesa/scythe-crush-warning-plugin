@@ -3,17 +3,24 @@ package com.scythecrushwarning;
 import com.google.inject.Provides;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.KeyCode;
+import net.runelite.api.MenuAction;
 import net.runelite.api.Player;
 import net.runelite.api.PlayerComposition;
+import net.runelite.api.Tile;
+import net.runelite.api.WorldView;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
+import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarPlayerID;
@@ -36,6 +43,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 public class ScytheCrushWarningPlugin extends Plugin
 {
 	public static final String CONFIG_GROUP = "scythecrushwarning";
+	public static final String CUSTOM_REGIONS_KEY = "customRegions";
 	private final int CRUSH_ATTACK_STYLE = 2;
 	private final int scytheItemId = ItemID.SCYTHE_OF_VITUR;
 	private final int sraItemId = ItemID.BETA_ITEM_1; // soulreaper axe (25484)
@@ -59,6 +67,9 @@ public class ScytheCrushWarningPlugin extends Plugin
 
 	@Inject
 	private ScytheCrushWarningConfig config;
+
+	@Inject
+	private ConfigManager configManager;
 
 	@Inject
 	private ScytheCrushWarningOverlay overlay;
@@ -149,6 +160,57 @@ public class ScytheCrushWarningPlugin extends Plugin
 			clientThread.invoke(allowedRegions::buildAllowedRegions);
 			clientThread.invoke(this::checkWeapon);
 		}
+	}
+
+	@Subscribe
+	public void onMenuEntryAdded(MenuEntryAdded event)
+	{
+		final MenuAction menuAction = event.getMenuEntry().getType();
+		if ((menuAction != MenuAction.WALK && menuAction != MenuAction.SET_HEADING)
+			|| !client.isKeyPressed(KeyCode.KC_SHIFT) || !config.markRegionMenu())
+		{
+			return;
+		}
+
+		final WorldView wv = client.getWorldView(event.getMenuEntry().getWorldViewId());
+		if (wv == null)
+		{
+			return;
+		}
+
+		final Tile selectedSceneTile = wv.getSelectedSceneTile();
+		if (selectedSceneTile == null)
+		{
+			return;
+		}
+
+		final int regionId = WorldPoint.fromLocalInstance(client, selectedSceneTile.getLocalLocation()).getRegionID();
+		final boolean marked = allowedRegions.getCustomRegions().contains(regionId);
+
+		client.getMenu().createMenuEntry(-1)
+			.setOption(marked ? "Unmark crush region" : "Mark crush region")
+			.setTarget("Region " + regionId)
+			.setType(MenuAction.RUNELITE)
+			.onClick(e -> markRegion(regionId, !marked));
+	}
+
+	private void markRegion(int regionId, boolean mark)
+	{
+		final Set<Integer> regions = allowedRegions.getCustomRegions();
+		final List<Integer> adjacentRegions = AllowedRegions.getAdjacentRegions(regionId, config.adjacentRegions());
+		if (mark)
+		{
+			regions.addAll(adjacentRegions);
+		}
+		else
+		{
+			regions.removeAll(adjacentRegions);
+		}
+
+		// fires ConfigChanged, which rebuilds the crush regions
+		configManager.setConfiguration(CONFIG_GROUP, CUSTOM_REGIONS_KEY, regions.stream()
+			.map(String::valueOf)
+			.collect(Collectors.joining(",")));
 	}
 
 	private void checkWeapon()
