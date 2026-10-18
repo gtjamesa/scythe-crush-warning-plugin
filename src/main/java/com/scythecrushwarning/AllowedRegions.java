@@ -1,12 +1,16 @@
 package com.scythecrushwarning;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import net.runelite.api.Client;
 import net.runelite.api.Player;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.client.util.Text;
 
 class AllowedRegions
 {
@@ -70,6 +74,40 @@ class AllowedRegions
 		{
 			allowedRegions.addAll(MaggotKingRegion.getAllRegions());
 		}
+
+		allowedRegions.addAll(getCustomRegions());
+	}
+
+	public Set<Integer> getCustomRegions()
+	{
+		Set<Integer> regions = new LinkedHashSet<>();
+		for (String region : Text.fromCSV(config.customRegions()))
+		{
+			try
+			{
+				regions.add(Integer.parseInt(region));
+			}
+			catch (NumberFormatException e)
+			{
+				// skip entries that aren't region IDs
+			}
+		}
+		return regions;
+	}
+
+	public static List<Integer> getAdjacentRegions(int regionId, int radius)
+	{
+		final int regionX = regionId >> 8;
+		final int regionY = regionId & 0xFF;
+		final List<Integer> regions = new ArrayList<>();
+		for (int dx = -radius; dx <= radius; dx++)
+		{
+			for (int dy = -radius; dy <= radius; dy++)
+			{
+				regions.add((regionX + dx) << 8 | (regionY + dy));
+			}
+		}
+		return regions;
 	}
 
 	public boolean regionChanged()
@@ -78,7 +116,7 @@ class AllowedRegions
 	}
 
 	/**
-	 * Update the last region and check if the player is within a boss region
+	 * Update the last region and check if the player is within a crush region
 	 *
 	 * @return boolean
 	 */
