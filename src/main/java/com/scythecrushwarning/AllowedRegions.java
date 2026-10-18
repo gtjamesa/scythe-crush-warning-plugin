@@ -95,9 +95,6 @@ class AllowedRegions
 		return regions;
 	}
 
-	/**
-	 * The region plus every region within radius in each direction, a square of (2 * radius + 1)^2 regions
-	 */
 	public static List<Integer> getAdjacentRegions(int regionId, int radius)
 	{
 		final int regionX = regionId >> 8;
