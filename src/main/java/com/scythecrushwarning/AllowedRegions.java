@@ -119,7 +119,7 @@ class AllowedRegions
 	}
 
 	/**
-	 * Update the last region and check if the player is within a boss region
+	 * Update the last region and check if the player is within a crush region
 	 *
 	 * @return boolean
 	 */

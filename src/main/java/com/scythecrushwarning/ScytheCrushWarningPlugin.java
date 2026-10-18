@@ -189,7 +189,7 @@ public class ScytheCrushWarningPlugin extends Plugin
 
 		client.getMenu().createMenuEntry(-1)
 			.setOption(marked ? "Unmark crush region" : "Mark crush region")
-			.setTarget("Region " + regionId)
+			.setTarget("(region: " + regionId + ")")
 			.setType(MenuAction.RUNELITE)
 			.onClick(e -> markRegion(regionId, !marked));
 	}
