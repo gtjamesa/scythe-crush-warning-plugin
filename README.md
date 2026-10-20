@@ -11,5 +11,6 @@ The overlay hides automatically at:
 - Royal Titans
 - Amoxliatl
 - Maggot King
+- The Fractured Archive
 
 SRA and Dharok's greataxe are also supported.

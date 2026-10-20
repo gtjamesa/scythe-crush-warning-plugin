@@ -75,6 +75,11 @@ class AllowedRegions
 			allowedRegions.addAll(MaggotKingRegion.getAllRegions());
 		}
 
+		if (config.ignoreFracturedArchive())
+		{
+			allowedRegions.addAll(FracturedArchiveRegion.getAllRegions());
+		}
+
 		allowedRegions.addAll(getCustomRegions());
 	}
 
