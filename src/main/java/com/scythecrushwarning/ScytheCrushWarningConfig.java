@@ -80,6 +80,12 @@ public interface ScytheCrushWarningConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(keyName = "ignoreFracturedArchive", name = "Ignore at Fractured Archive", description = "Do not show warning at The Fractured Archive", section = BOSSES_SECTION)
+	default boolean ignoreFracturedArchive()
+	{
+		return true;
+	}
+
 	@ConfigItem(keyName = "markRegionMenu", name = "Shift-click to mark", description = "Shift + right-click a tile to mark or unmark its region as a crush region", section = CUSTOM_REGIONS_SECTION, position = 0)
 	default boolean markRegionMenu()
 	{
